@@ -1,6 +1,6 @@
 import json
 import flet as ft
-from src.Agent import run_agent
+from Agent import run_agent
 
 def main(page: ft.Page):
     page.title = "Code Generator and Translator"

@@ -1,81 +1,35 @@
-# CleverCodeApplication app
+# CleverCodeApplicationAI app
 
-## Run the app
+### Before running the app
 
-### uv
-
-Run as a desktop app:
-
-```
-uv run flet run
-```
-
-Run as a web app:
+1. Make sure to set up a virtual environment before.
+2. Make sure all the requirements are installed with this command:
 
 ```
-uv run flet run --web
+pip install -r requirements.txt
 ```
+3. Make sure ollama is running 
 
-### Poetry
 
-Install dependencies from `pyproject.toml`:
+### Run Backend
 
-```
-poetry install
-```
-
-Run as a desktop app:
+1. Be connected to the school network
+2. Run Endpoints.py alone
 
 ```
-poetry run flet run
+python Endpoints.py
 ```
 
-Run as a web app:
+To find the docs just go to http://localhost:8000/docs
+
+###
+Run UI:
 
 ```
-poetry run flet run --web
+flet run
+```
+or
+```
+python.exe main.py
 ```
 
-For more details on running the app, refer to the [Getting Started Guide](https://flet.dev/docs/getting-started/).
-
-## Build the app
-
-### Android
-
-```
-flet build apk -v
-```
-
-For more details on building and signing `.apk` or `.aab`, refer to the [Android Packaging Guide](https://flet.dev/docs/publish/android/).
-
-### iOS
-
-```
-flet build ipa -v
-```
-
-For more details on building and signing `.ipa`, refer to the [iOS Packaging Guide](https://flet.dev/docs/publish/ios/).
-
-### macOS
-
-```
-flet build macos -v
-```
-
-For more details on building macOS package, refer to the [macOS Packaging Guide](https://flet.dev/docs/publish/macos/).
-
-### Linux
-
-```
-flet build linux -v
-```
-
-For more details on building Linux package, refer to the [Linux Packaging Guide](https://flet.dev/docs/publish/linux/).
-
-### Windows
-
-```
-flet build windows -v
-```
-
-For more details on building Windows package, refer to the [Windows Packaging Guide](https://flet.dev/docs/publish/windows/).
