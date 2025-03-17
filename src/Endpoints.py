@@ -27,7 +27,7 @@ class StyleCode(BaseModel):
 
 
 @app.post("/explain_code")
-async def explain(snippet: CodeSnippet):
+async def explain(code: str):
     model = Ollama(model="deepseek-r1:1.5b")
 
     prompt = PromptTemplate.from_template(
@@ -37,32 +37,32 @@ async def explain(snippet: CodeSnippet):
     chain = prompt | model
 
     explanation = chain.invoke({
-        "code": snippet.code,
+        "code": code,
     })
     return {"explanation": explanation}
 
 
 
 @app.post("/generate_code")
-async def generate(request: CodeRequest):
+async def generate(request: str, language: str):
     model = Ollama(model="deepseek-r1:1.5b")
 
     prompt = PromptTemplate.from_template(
-        "Generate {language} code for this requirement:\n\n{description}"
+        "Generate {language} code for this requirement:\n\n{request}"
     )
 
     chain = prompt | model
 
     generated_code = chain.invoke({
-        "language": request.language,
-        "description": request.request
+        "language": language,
+        "description": request
     })
 
-    return {"language": request.language, "code": generated_code}
+    return {"language": language, "code": generated_code}
 
 
 @app.post("/translate_code")
-async def translate(request: CodeTranslation):
+async def translate(code: str, desired_language: str):
     model = Ollama(model="deepseek-r1:1.5b")
 
     prompt = PromptTemplate.from_template(
@@ -72,14 +72,14 @@ async def translate(request: CodeTranslation):
 
     chain = prompt | model
     translated_code=chain.invoke({
-        "code": request.code,
-        "desired_language": request.language,
+        "code": code,
+        "desired_language": desired_language,
     })
     return {"translated_code": translated_code}
 
 
 @app.post("/style_preferences")
-async def style(request: CodeTranslation):
+async def style(code: str, desired_style: str):
     model = Ollama(model="deepseek-r1:1.5b")
 
     prompt = PromptTemplate.from_template(
@@ -90,13 +90,13 @@ async def style(request: CodeTranslation):
     chain = prompt | model
 
     styled_code=chain.invoke({
-        "code": request.code,
-        "desired_style": request.desired_style,
+        "code": code,
+        "desired_style": desired_style,
     })
     return {"styled_code": styled_code}
 
 @app.post("/code_quality_analysis")
-async def code_quality_analysis(request: CodeSnippet):
+async def code_quality_analysis(code: str):
     model = Ollama(model="deepseek-r1:1.5b")
 
     prompt = PromptTemplate.from_template(
@@ -105,10 +105,10 @@ async def code_quality_analysis(request: CodeSnippet):
 
     chain = prompt | model
 
-    code_quality_analysis = chain.invoke({
-        "code": request.code,
+    codequality_analysis = chain.invoke({
+        "code": code,
     })
-    return {"code_quality_analysis": code_quality_analysis}
+    return {"code_quality_analysis": codequality_analysis}
 
 
 

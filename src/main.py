@@ -1,4 +1,6 @@
+import json
 import flet as ft
+from src.Agent import run_agent
 
 def main(page: ft.Page):
     page.title = "Code Generator and Translator"
@@ -54,39 +56,51 @@ def main(page: ft.Page):
     def generate_code(e):
         description = code_description.value
         language = language_dropdown.value
-        if description and language:
-            # Call API to generate code (placeholder)
-            generated_code = f"Generated {language} code for: {description}"
-            output_description.value = generated_code
-            page.update()
+        inputs = json.dumps({"request": description, "language": language})
+
+        generated_code = run_agent("generate_code", inputs)
+        code_text = generated_code["code"]
+        formatted_text = code_text.replace("<think>", "").replace("</think>", "").strip()
+        formatted_text = "\n".join([line.strip() for line in formatted_text.split("\n") if line.strip()])
+        output_description.value = formatted_text
+        page.update()
 
     # Function to explain code
     def explain_code(e):
-        snippet = code_input.value
-        if snippet:
-            # Call API to explain code (placeholder)
-            explanation = f"Explanation: This is a {language_dropdown.value} code snippet."
-            output_explanation.value = explanation
-            page.update()
+        code = code_input.value
+        inputs = json.dumps({"code": code})
+
+        explanation = run_agent("explain_code", inputs)
+        text = explanation["explanation"]
+        formatted_text = text.replace("<think>", "").replace("</think>", "").strip()
+        formatted_text = "\n".join([line.strip() for line in formatted_text.split("\n") if line.strip()])
+        output_explanation.value = formatted_text
+        page.update()
 
     # Function to translate code
     def translate_code(e):
-        snippet = code_input.value
-        target_language = target_language_dropdown.value
-        if snippet and target_language:
-            # Call API to translate code (placeholder)
-            translated_code = f"Translated to {target_language}: {snippet}"
-            output_translation.value = translated_code
-            page.update()
+        code = code_input.value
+        language = target_language_dropdown.value
+        inputs = json.dumps({"code": code, "language": language})
+
+        translated_code = run_agent("translate_code", inputs)
+        text = translated_code["code"]
+        formatted_text = text.replace("<think>", "").replace("</think>", "").strip()
+        formatted_text = "\n".join([line.strip() for line in formatted_text.split("\n") if line.strip()])
+        output_translation.value = formatted_text
+        page.update()
 
     # Function to analyze code quality
     def analyze_code_quality(e):
-        snippet = code_input.value
-        if snippet:
-            # Call API to analyze code quality (placeholder)
-            analysis_result = f"Quality Analysis for {language_dropdown.value} code:\n- No issues found."
-            output_quality_analysis.value = analysis_result
-            page.update()
+        code = code_input.value
+        inputs = json.dumps({"code": code})
+
+        analysis_result = run_agent("code_quality", inputs)
+        text = analysis_result["code_quality_analysis"]
+        formatted_text = text.replace("<think>", "").replace("</think>", "").strip()
+        formatted_text = "\n".join([line.strip() for line in formatted_text.split("\n") if line.strip()])
+        output_quality_analysis.value = formatted_text
+        page.update()
 
     # Function to save settings
     def save_settings(e):
@@ -134,6 +148,7 @@ def main(page: ft.Page):
                 ],
                 spacing=20,
                 scroll=ft.ScrollMode.AUTO,
+                expand=True,  # Allow the column to expand and take available space
             )
         elif selected_index == 1:  # Explain Code
             page_content.content = ft.Column(
@@ -145,6 +160,7 @@ def main(page: ft.Page):
                 ],
                 spacing=20,
                 scroll=ft.ScrollMode.AUTO,
+                expand=True,
             )
         elif selected_index == 2:  # Translate Code
             page_content.content = ft.Column(
@@ -157,6 +173,7 @@ def main(page: ft.Page):
                 ],
                 spacing=20,
                 scroll=ft.ScrollMode.AUTO,
+                expand=True,
             )
         elif selected_index == 3:  # Code Quality Analysis
             page_content.content = ft.Column(
@@ -168,6 +185,7 @@ def main(page: ft.Page):
                 ],
                 spacing=20,
                 scroll=ft.ScrollMode.AUTO,
+                expand=True,
             )
         elif selected_index == 4:  # Settings
             page_content.content = ft.Column(
@@ -179,6 +197,7 @@ def main(page: ft.Page):
                 ],
                 spacing=20,
                 scroll=ft.ScrollMode.AUTO,
+                expand=True,
             )
         page.update()
 
@@ -189,7 +208,10 @@ def main(page: ft.Page):
     page.add(
         ft.Column(
             [
-                page_content,
+                ft.Container(
+                    content=page_content,
+                    expand=True,  # Allow the container to expand and take available space
+                ),
                 nav_bar,
             ],
             expand=True,
