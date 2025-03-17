@@ -1,6 +1,6 @@
 from langchain.agents import initialize_agent
 from langchain_community.llms import Ollama
-from src.Tools import explainTool,generateTool,translateTool,styleTool,codeQualityTool
+from src.Tools import explainTool,generateTool,translateTool,styleTool,codeQualityTool,recognizeTool
 
 def chooseModel(request_type: str):
     models = {
@@ -9,6 +9,7 @@ def chooseModel(request_type: str):
         "translate_code": "llama3.2",
         "style_preferences": "llama3.2",
         "code_quality": "deepseek-r1:1.5b",
+        "language_check": "deepseek-r1:1.5b",
     }
     return Ollama(model=models.get(request_type, "deepseek-r1:1.5b"))
 
@@ -18,7 +19,7 @@ def chooseModel(request_type: str):
 
 def run_agent(task_type: str, input_data: str):
     agent = initialize_agent(
-        tools=[explainTool, generateTool, translateTool, styleTool, codeQualityTool],
+        tools=[explainTool, generateTool, translateTool, styleTool, codeQualityTool, recognizeTool],
         llm=chooseModel(task_type),
         verbose=True
     )
@@ -31,6 +32,7 @@ def run_agent(task_type: str, input_data: str):
         "translate_code": translateTool,
         "style_preferences": styleTool,
         "code_quality": codeQualityTool,
+        "language_check": recognizeTool,
     }
 
     tool = tool_map.get(task_type)

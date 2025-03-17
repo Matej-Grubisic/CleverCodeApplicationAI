@@ -77,14 +77,12 @@ def main(page: ft.Page):
         output_explanation.value = formatted_text
         page.update()
 
-    # Function to translate code
-    def translate_code(e):
+    def check_language(e):
         code = code_input.value
-        language = target_language_dropdown.value
-        inputs = json.dumps({"code": code, "language": language})
+        inputs = json.dumps({"code": code})
 
-        translated_code = run_agent("translate_code", inputs)
-        text = translated_code["code"]
+        language = run_agent("language_check", inputs)
+        text = language["language"]
         formatted_text = text.replace("<think>", "").replace("</think>", "").strip()
         formatted_text = "\n".join([line.strip() for line in formatted_text.split("\n") if line.strip()])
         output_translation.value = formatted_text
@@ -121,7 +119,7 @@ def main(page: ft.Page):
         destinations=[
             ft.NavigationBarDestination(icon=ft.icons.CODE, label="Generate Code"),
             ft.NavigationBarDestination(icon=ft.icons.HELP_OUTLINE, label="Explain Code"),
-            ft.NavigationBarDestination(icon=ft.icons.TRANSLATE, label="Translate Code"),
+            ft.NavigationBarDestination(icon=ft.icons.TRANSLATE, label="Check Code Language"),
             ft.NavigationBarDestination(icon=ft.icons.ASSESSMENT, label="Code Quality"),
             ft.NavigationBarDestination(icon=ft.icons.SETTINGS, label="Settings"),
         ],
@@ -162,13 +160,12 @@ def main(page: ft.Page):
                 scroll=ft.ScrollMode.AUTO,
                 expand=True,
             )
-        elif selected_index == 2:  # Translate Code
+        elif selected_index == 2:
             page_content.content = ft.Column(
                 [
-                    ft.Text("Code Translation", size=24, weight="bold"),
+                    ft.Text("Language Checker", size=24, weight="bold"),
                     code_input,
-                    target_language_dropdown,
-                    ft.ElevatedButton("Translate Code", on_click=translate_code),
+                    ft.ElevatedButton("Check Language", on_click=check_language),
                     output_translation,
                 ],
                 spacing=20,
