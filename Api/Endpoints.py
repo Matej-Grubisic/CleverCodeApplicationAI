@@ -95,6 +95,22 @@ async def style(request: CodeTranslation):
     })
     return {"styled_code": styled_code}
 
+@app.post("/code_quality_analysis")
+async def code_quality_analysis(request: CodeSnippet):
+    model = Ollama(model="deepseek-r1:1.5b")
+
+    prompt = PromptTemplate.from_template(
+        "In detail describe the quality, good and bad things about the following code: {code}"
+    )
+
+    chain = prompt | model
+
+    code_quality_analysis = chain.invoke({
+        "code": request.code,
+    })
+    return {"code_quality_analysis": code_quality_analysis}
+
+
 
 
 if __name__ == "__main__":
