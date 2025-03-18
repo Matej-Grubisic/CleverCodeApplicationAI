@@ -106,6 +106,21 @@ def main(page: ft.Page):
         indentation = settings_indentation.value
         naming_convention = settings_naming_convention.value
         print(f"Settings saved: Indentation={indentation}, Naming Convention={naming_convention}")
+
+        settings_data = {
+            "indentation": indentation,
+            "naming_convention": naming_convention
+        }
+
+        settings_file_path = "settings.json"
+
+        try:
+            with open(settings_file_path, 'w') as json_file:
+                json.dump(settings_data, json_file, indent=4)
+                print("Settings have been saved to the file.")
+        except Exception as e:
+            print(f"Error saving settings: {e}")
+
         page.update()
 
     # Function to handle navigation bar changes
